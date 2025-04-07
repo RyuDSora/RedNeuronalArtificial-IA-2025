@@ -1,3 +1,9 @@
+pillow
+math
+tkinter
+ttkbootstrap
+os
+threading
 dash
 dash-bootstrap-components
 numpy
