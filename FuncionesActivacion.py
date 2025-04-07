@@ -21,10 +21,13 @@ def tanh(x):
 def relu(x):
     return max(0, x)
 
-#Activación softmax
-#f(xi) = e^xi/Σj e^xj
-def softmax(x):
-    valores_de_X = [math.exp(i) for i in x]
-    suma_de_valores_de_X = sum(valores_de_X)
-    return [i / suma_de_valores_de_X for i in valores_de_X]
+#derivadas para la backpropagation
+def derivada_sigmoide(y):
+    return y * (1 - y)
+def derivada_relu(y):
+    return 1.0 * (y > 0)
+def derivada_tanh(y):
+    return 1 - y**2
+def derivada_lineal(y):
+    return 1
 

@@ -3,23 +3,21 @@ from RedNeuronalArtificial import RedNeuronalArtificial
 
 
 dataset = [
-    ("Nueva/train.jpg", 1),
-    ("Nueva/train2.jpg", 1),
-    ("Nueva/train3.jpg", 1),
-    ("Nueva/train4.jpg", 0),
-    ("Nueva/train5.jpg", 0)
+    ("train.jpg", 1)
+
 ]
 
 #print(dataset)
-
-tamanio_entrada = 32*32
-tamanio_oculta = 32
+foto_ancho = 600
+foto_alto = 800
+tamanio_entrada = foto_ancho*foto_alto
+capas_ocultas = [100,50,203]
 tamanio_salida = 1
-funcion_activacion = 'sigmoide' #sigmoide, relu, softmax, lineal, tanh
-epochs = 1000
+funcion_activacion = 'sigmoide' #sigmoide, relu,  lineal, tanh
+epochs = 100
 tasa_aprendizaje = 0.1
 
-X = [pf.cargar_foto(url) for url, objetivo in dataset]
+X = [pf.cargar_foto(url, foto_ancho, foto_alto) for url, objetivo in dataset]
 
 #print(X)
 
@@ -27,12 +25,14 @@ y = [[objetivo] for url, objetivo in dataset]
 
 #print(y)
 
-nn = RedNeuronalArtificial(tamanio_entrada,tamanio_oculta,tamanio_salida,funcion_activacion)
+nn = RedNeuronalArtificial(tamanio_entrada,capas_ocultas,tamanio_salida,funcion_activacion)
 nn.entrenar(X, y, epochs, tasa_aprendizaje)
 
-fotos_prueba = ["Nueva/test1.jpg", "Nueva/test2.jpg", 'Nueva/test3.jpg']
+fotos_prueba = ["test1.jpg", 
+                "test2.jpg", 
+                'test3.jpg']
 
-for path in fotos_prueba:
-    result = nn.propagacion(pf.cargar_foto(path))
+for url in fotos_prueba:
+    result = nn.propagacion(pf.cargar_foto(url, foto_ancho, foto_alto))
     pred = "MISMA persona" if result[0] > 0.8 else "DIFERENTE persona"
-    print(f"{path} → {pred} ({result[0]:.4f})")
+    print(f"{url} → {pred} ({result[0]*100:.0f}%)")
