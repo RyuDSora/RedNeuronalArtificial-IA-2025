@@ -9,6 +9,7 @@ class Neurona:
         self.salida = 0.0
         self.backpropagation = 0.0  # para backpropagation
         self.funcion_activacion = funcion_activacion
+        self.sesgo = np.random.randn()
         self.activacion, self.derivada = self._get_funciones()
 
     def agregar_entrada(self, neurona, peso):
@@ -28,6 +29,7 @@ class Neurona:
 
     def activar_neurona(self):
         total = sum(neurona.salida * peso for neurona, peso in self.entradas)
+        total += self.sesgo
         self.salida = self.activacion(total) # salida segun la funcion de activacion dada
 
 
@@ -100,6 +102,8 @@ class RedNeuronalArtificial:
             for entrada in neurona.entradas:
                 entrada_neurona, peso = entrada
                 entrada[1] += tasa_aprendizaje * neurona.backpropagation * entrada_neurona.salida
+            
+            neurona.sesgo += tasa_aprendizaje * neurona.backpropagation
 
         # Actualizar pesos (oculta)
         for capa in self.capas_ocultas:
@@ -107,6 +111,7 @@ class RedNeuronalArtificial:
                 for entrada in neurona.entradas:
                     entrada_neurona, peso = entrada
                     entrada[1] += tasa_aprendizaje * neurona.backpropagation * entrada_neurona.salida
+                neurona.sesgo += tasa_aprendizaje * neurona.backpropagation
 
     def entrenar(self, X, y, epochs=1000, lr=0.1):
         for epoch in range(epochs):
@@ -118,4 +123,5 @@ class RedNeuronalArtificial:
                 self.propagacionAtras(y[i], tasa_aprendizaje=lr)
             if epoch % 1 == 0:
                 print(f"Epoch {epoch}, Error: {error_total:.6f}")
+                yield [epoch,error_total]
 
